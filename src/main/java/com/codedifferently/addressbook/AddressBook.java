@@ -5,6 +5,7 @@ import com.codedifferently.database.MySQLDatabase;
 import com.codedifferently.database.exceptions.DatabaseCouldNotSaveException;
 import com.codedifferently.person.Person;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -17,24 +18,22 @@ public class AddressBook {
     public AddressBook(Person owner, MySQLDatabase database){
         this.owner = owner;
         this.dataBase = database;
-        this.people = database.getAllPeople();
+        this.people = new ArrayList<>();
+        //this.people = database.getAllPeople(); //Should get all of our people from database.
     }
 
     public void addPerson(Person person){
         this.people.add(person);
         saveAll();
-        //this.people.remove(person); Adding people is not working once we have one person on our database //// TODO: 1/8/21 Should we remove person after saving?
+        removePerson(person);
     }
 
     public void removePerson(Person person){
-        logger.info("Removing person " + person.getFirstName());
         this.people.remove(person);
-        /**
-         * Todo :: update database;
-         */
     }
+
     public Person getPersonByEmail(String email) throws AddressBookPersonNotFoundException {
-        return people.stream()
+        return dataBase.getAllPeople().stream()
                 .filter(person -> person.getEmail().equals(email))
                 .findFirst()
                 .orElseThrow(AddressBookPersonNotFoundException::new);
@@ -44,10 +43,9 @@ public class AddressBook {
         return people;
     }
 
-    public Boolean saveAll(){
+    public Boolean saveAll(){ //Save all should sink up with our database. So remove extras and add missing. // TODO: 1/8/21
         try {
-            dataBase.saveAllPeople(people);
-            people.forEach(nm -> System.out.println(nm.toString()));
+            dataBase.saveAllPeople(this.people);
             return true;
         } catch (DatabaseCouldNotSaveException e) {
            logger.info("Failed To Save AT SAVEALL() IN ADDRESSBOOK");

@@ -6,25 +6,33 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Person {
+    private String id;
     private String firstName;
     private String lastName;
     private Integer age;
     private String email;
-    private String id;
+    private String phoneNumber;
 
-
-    public Person(Map<String, String> personMap) { // This takes in an initial call to our constructor and recalls it adding an id number. Since we have an overloaded method, it now calls our second constructor.
-        this(UUID.randomUUID().toString(), personMap);
+    public Person(Map<String, String> personData){
+        this(UUID.randomUUID().toString(), personData);
     }
 
-    public Person(String id, Map<String, String> personMap) {
-        this.firstName = personMap.getOrDefault("firstName", "no value");
-        this.lastName = personMap.getOrDefault("lastName", "no value");
-        this.age = Integer.parseInt(personMap.getOrDefault("age", "0"));
-        this.email = personMap.getOrDefault("email", "no value");
-        this.id = id;
+    public Person(String id, Map<String, String> personData){
+        this.id =id;
+        this.firstName = personDataParserString("firstName", personData);
+        this.lastName = personDataParserString("lastName", personData);
+        this.age = personDataParserInteger("age", personData);
+        this.email = personDataParserString("email", personData);
+        this.phoneNumber = personDataParserString("phoneNumber", personData);
     }
 
+    private String personDataParserString(String key, Map<String, String> personData){
+        return (personData.containsKey(key))? personData.get(key) : "not set";
+    }
+
+    private Integer personDataParserInteger(String key, Map<String, String> personData){
+        return (personData.containsKey(key))? Integer.parseInt(personData.get(key)) : 0;
+    }
 
     public String getId() {
         return id;

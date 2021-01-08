@@ -17,7 +17,7 @@ public class MySQLDatabase implements Database {
     private void getConnection() throws DataBaseConnectionException {
         try {
             connection = DriverManager
-                    .getConnection("jdbc:mysql://localhost:3306/addressbook?createDatabaseIfNotExist=true&useSSL=false", "developer01", "pass");
+                    .getConnection("jdbc:mysql://localhost:3306/cdDb?createDatabaseIfNotExist=true&useSSL=false", "developer01", "pass");
             connection.setAutoCommit(false);
             logger.info("Successful Connection");
         }
@@ -31,7 +31,11 @@ public class MySQLDatabase implements Database {
         getConnection();
     }
 
-    public List<Person> getAllPeople() { //// TODO: 1/8/21 Return an ArrayList Of Person for AddressBook, pull from db
+    public void deletePerson(Person person) {
+        // "DELETE FROM PERSON WHERE ID = " person.getId();
+    }
+
+    public List<Person> getAllPeople() {
         List<Person> people = new ArrayList<>();
         try {
             String sql = "SELECT * FROM PERSON";
@@ -44,7 +48,7 @@ public class MySQLDatabase implements Database {
                 rawData.put("lastName", resultSet.getString("last_name"));
                 rawData.put("email", resultSet.getString("email"));
                 rawData.put("age", resultSet.getString("age"));
-                Person person = new Person(id, rawData);
+                Person person = new Person(id, rawData); // Create a hashMap with our db person and create a new person from that person.
                 people.add(person);
             }
         }

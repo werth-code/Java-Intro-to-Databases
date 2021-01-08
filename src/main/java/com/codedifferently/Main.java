@@ -8,19 +8,15 @@ import com.codedifferently.person.Person;
 
 import java.util.*;
 
-
-//// TODO: 1/8/21 We can add the first person, but after that it is no longer adding and it is having an error. We need to make sure that once the person
-//// We should probably clear out the old person before trying to add another person.
-
-
 public class Main {
 
     private final AddressBook addressBook;
     private static Scanner scanner;
     private ArrayList<String> menu;
+    MySQLDatabase mySQLDatabase;
 
     public Main() throws DataBaseConnectionException {
-        MySQLDatabase mySQLDatabase = new MySQLDatabase();
+        mySQLDatabase = new MySQLDatabase();
         scanner = new Scanner(System.in);
         addressBook = new AddressBook(null, mySQLDatabase);
         initMenuOption();
@@ -32,7 +28,6 @@ public class Main {
             menu.add("Show All");
             menu.add("Add New");
             menu.add("Find by email");
-            menu.add("Save All Contacts");
     }
 
     public Integer displayMenu(){
@@ -46,7 +41,7 @@ public class Main {
     }
 
     public void displayAllPeople() {
-        addressBook.getAllPeople().forEach(person -> System.out.println(person.toString()));
+        mySQLDatabase.getAllPeople().forEach(person -> System.out.println(person.toString()));
     }
 
     private String getStringOutPut(String msg){
@@ -97,7 +92,7 @@ public class Main {
                         main.displayAllPeople();
                         break;
                     case 2:
-                        main.createNewPerson();
+                        main.createNewPerson(); //// TODO: 1/8/21  
                         break;
                     case 3:
                         main.findPerson();

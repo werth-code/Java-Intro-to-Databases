@@ -4,7 +4,7 @@ import com.codedifferently.person.Person;
 
 import java.util.List;
 
-public interface Database {
+interface Database {
     void savePerson(Person person) throws DatabaseCouldNotSaveException;
     void saveAllPeople(List<Person> people) throws DatabaseCouldNotSaveException;
     List<Person> getAllPeople();
