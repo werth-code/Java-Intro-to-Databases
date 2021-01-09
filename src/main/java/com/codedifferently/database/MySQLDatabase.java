@@ -31,10 +31,6 @@ public class MySQLDatabase implements Database {
         getConnection();
     }
 
-    public void deletePerson(Person person) {
-        // "DELETE FROM PERSON WHERE ID = " person.getId();
-    }
-
     public List<Person> getAllPeople() {
         List<Person> people = new ArrayList<>();
         try {
@@ -57,6 +53,33 @@ public class MySQLDatabase implements Database {
         }
         return people;
     }
+
+    public void deletePerson(Person person) { //// TODO: 1/9/21 This is not deleting on the db, but seems to be working correctly in code..
+        try {
+            String sql = String.format("DELETE FROM PERSON WHERE id = '%s'", person.getId());
+            Statement statement = connection.createStatement();
+            statement.execute(sql);
+            logger.info("Successfully Deleted Contact " + person.toString());
+
+            statement.executeBatch();
+            connection.commit();
+        }
+        catch (SQLException e){
+            logger.info(e.getMessage());
+        }
+    }
+    
+    public void updatePerson(String entryToUpdate, String newValue, String oldValue) { //// TODO: 1/9/21 This sql may need to be fixed! We Need OLD value as well....
+        try {
+            String sql = String.format("UPDATE PERSON SET %s = '%s' WHERE %s = '%s'", entryToUpdate, newValue, entryToUpdate, oldValue);
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(sql);
+        }
+        catch (SQLException sqlException){
+            logger.info(sqlException.getMessage());
+        }
+    }
+
 
     @Override
     public void savePerson(Person person) throws DatabaseCouldNotSaveException {

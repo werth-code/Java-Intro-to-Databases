@@ -25,15 +25,17 @@ public class Main {
     private void initMenuOption(){
             menu = new ArrayList<>();
             menu.add("Exit");
-            menu.add("Show All");
-            menu.add("Add New");
-            menu.add("Find by email");
+            menu.add("Show All Contacts");
+            menu.add("Add New Contact");
+            menu.add("Find Contact By E-Mail");
+            menu.add("Update An Existing Contact");
+            menu.add("Delete A Contact");
     }
 
     public Integer displayMenu(){
         int option = 0;
         for(int i = 0; i < menu.size(); i++){
-            String menuOption = String.format("Press %d for %s", i, menu.get(i));
+            String menuOption = String.format("Press %d To %s", i, menu.get(i));
             System.out.println(menuOption);
         }
         option = scanner.nextInt();
@@ -60,14 +62,26 @@ public class Main {
         addressBook.addPerson(person);
     }
 
-    public void findPerson(){
-        String email = getStringOutPut("What email are you looking for?");
+    public Person findPerson(){ //// TODO: 1/9/21 This now returns the found person - may not need to.. 
+        String email = getStringOutPut("Enter The Email Address Of The Contact You Are Looking For: ");
         try {
             Person person = addressBook.getPersonByEmail(email);
             displayPerson(person);
-        } catch (AddressBookPersonNotFoundException e) {
-            System.out.println("There is no user with the email :" + email);
+            return person;
         }
+        catch (AddressBookPersonNotFoundException e) {
+            System.out.println("No User With This E-Mail Address: " + email);
+        }
+        return null;
+    }
+
+   public void updateAnExistingContact() {
+        Person person = findPerson();
+   }
+
+    public void deleteAnExistingContact() {
+        Person person = findPerson();
+        mySQLDatabase.deletePerson(person);
     }
 
     private void displayPerson(Person person){
@@ -96,6 +110,12 @@ public class Main {
                         break;
                     case 3:
                         main.findPerson();
+                        break;
+                    case 4:
+                        main.updateAnExistingContact();
+                        break;
+                    case 5:
+                        main.deleteAnExistingContact();
                         break;
                     default:
                         System.out.println("I don't know that command");

@@ -18,14 +18,12 @@ public class AddressBook {
     public AddressBook(Person owner, MySQLDatabase database){
         this.owner = owner;
         this.dataBase = database;
-        this.people = new ArrayList<>();
-        //this.people = database.getAllPeople(); //Should get all of our people from database.
+        this.people = new ArrayList<>(); //// TODO: 1/8/21 Changed this to be a seperate List
     }
 
     public void addPerson(Person person){
         this.people.add(person);
-        saveAll();
-        removePerson(person);
+        if(saveAll()) removePerson(person);  //// TODO: 1/8/21  Changed This to remove a person after we save them to DB
     }
 
     public void removePerson(Person person){
@@ -43,15 +41,15 @@ public class AddressBook {
         return people;
     }
 
-    public Boolean saveAll(){ //Save all should sink up with our database. So remove extras and add missing. // TODO: 1/8/21
+    public Boolean saveAll(){
         try {
             dataBase.saveAllPeople(this.people);
             return true;
-        } catch (DatabaseCouldNotSaveException e) {
-           logger.info("Failed To Save AT SAVEALL() IN ADDRESSBOOK");
-            return false;
         }
-
+        catch (DatabaseCouldNotSaveException e) {
+           logger.warning("Failed To Save to ADDRESS BOOK");
+           return false;
+        }
     }
 
 }
