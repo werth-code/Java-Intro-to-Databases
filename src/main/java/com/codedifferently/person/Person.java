@@ -19,7 +19,7 @@ public class Person {
 
     public Person(String id, Map<String, String> personData){
         this.id =id;
-        this.firstName = personDataParserString("firstName", personData);
+        this.firstName = personDataParserString("firstName", personData); //// TODO: 1/9/21 These could all be getOrDefault statements.. wrap int in parseInt()
         this.lastName = personDataParserString("lastName", personData);
         this.age = personDataParserInteger("age", personData);
         this.email = personDataParserString("email", personData);
@@ -27,7 +27,7 @@ public class Person {
     }
 
     private String personDataParserString(String key, Map<String, String> personData){
-        return (personData.containsKey(key))? personData.get(key) : "not set";
+        return personData.getOrDefault(key, "not set");
     }
 
     private Integer personDataParserInteger(String key, Map<String, String> personData){

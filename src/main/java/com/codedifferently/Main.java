@@ -30,6 +30,7 @@ public class Main {
             menu.add("Find Contact By E-Mail");
             menu.add("Update An Existing Contact");
             menu.add("Delete A Contact");
+            menu.add("Set Owner");
     }
 
     public Integer displayMenu(){
@@ -51,18 +52,7 @@ public class Main {
         return scanner.next();
     }
 
-
-    public void createNewPerson(){
-        Map<String, String> rawData = new HashMap<>();
-        rawData.put("firstName", getStringOutPut("Please enter first name:"));
-        rawData.put("lastName", getStringOutPut("Please enter last name:"));
-        rawData.put("email", getStringOutPut("Please enter email:"));
-        rawData.put("age", getStringOutPut("Please enter age:"));
-        Person person = new Person(rawData);
-        addressBook.addPerson(person);
-    }
-
-    public Person findPerson(){ //// TODO: 1/9/21 This now returns the found person - may not need to.. 
+    public Person findPerson(){ //// TODO: 1/9/21 This now returns the found person - may not need to..
         String email = getStringOutPut("Enter The Email Address Of The Contact You Are Looking For: ");
         try {
             Person person = addressBook.getPersonByEmail(email);
@@ -75,8 +65,27 @@ public class Main {
         return null;
     }
 
-   public void updateAnExistingContact() {
+    public void createNewPerson(){
+        Map<String, String> rawData = new HashMap<>();
+        rawData.put("firstName", getStringOutPut("Please enter first name:"));
+        rawData.put("lastName", getStringOutPut("Please enter last name:"));
+        rawData.put("email", getStringOutPut("Please enter email:"));
+        rawData.put("age", getStringOutPut("Please enter age:"));
+        Person person = new Person(rawData);
+        addressBook.addPerson(person);
+    }
+
+
+   public void updateAnExistingContact() { // // TODO: 1/9/21 This works but is messy! 
         Person person = findPerson();
+        Map<String, String> rawData = new HashMap<>();
+        rawData.put("firstName", getStringOutPut("Please enter new first name:"));
+        rawData.put("lastName", getStringOutPut("Please enter new last name:"));
+        rawData.put("email", getStringOutPut("Please enter new email:"));
+        rawData.put("age", getStringOutPut("Please enter new age:"));
+        Person updatedPerson = new Person(person.getId(), rawData);
+        mySQLDatabase.deletePerson(person);
+        mySQLDatabase.updatePerson(updatedPerson);
    }
 
     public void deleteAnExistingContact() {
@@ -94,7 +103,8 @@ public class Main {
         try {
             Main main = new Main();
             Boolean endProgram = false;
-            System.out.println("Welcome to address book");
+            String greeting = String.format("\nWelcome To The Address Book");
+            System.out.println(greeting);
             while (!endProgram) {
                 int menuOption = main.displayMenu();
                 switch(menuOption){
@@ -116,6 +126,9 @@ public class Main {
                         break;
                     case 5:
                         main.deleteAnExistingContact();
+                        break;
+                    case 6:
+                        //main.setOwner();
                         break;
                     default:
                         System.out.println("I don't know that command");

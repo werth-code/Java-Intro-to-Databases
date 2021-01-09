@@ -54,12 +54,12 @@ public class MySQLDatabase implements Database {
         return people;
     }
 
-    public void deletePerson(Person person) { //// TODO: 1/9/21 This is not deleting on the db, but seems to be working correctly in code..
+    public void deletePerson(Person person) {
         try {
             String sql = String.format("DELETE FROM PERSON WHERE id = '%s'", person.getId());
             Statement statement = connection.createStatement();
             statement.execute(sql);
-            logger.info("Successfully Deleted Contact " + person.toString());
+            logger.info("Successfully Updated Address Book " + person.toString());
 
             statement.executeBatch();
             connection.commit();
@@ -69,11 +69,19 @@ public class MySQLDatabase implements Database {
         }
     }
     
-    public void updatePerson(String entryToUpdate, String newValue, String oldValue) { //// TODO: 1/9/21 This sql may need to be fixed! We Need OLD value as well....
+    public void updatePerson(Person person) { //// TODO: 1/9/21 This sql may need to be fixed! We Need OLD value as well....
         try {
-            String sql = String.format("UPDATE PERSON SET %s = '%s' WHERE %s = '%s'", entryToUpdate, newValue, entryToUpdate, oldValue);
+            String sqlInsert = String.format("INSERT INTO PERSON (id,first_name,last_name,email,age) VALUES ('%s','%s','%s','%s','%d')",
+                    person.getId(),
+                    person.getFirstName(),
+                    person.getLastName(),
+                    person.getEmail(),
+                    person.getAge());
             Statement statement = connection.createStatement();
-            statement.executeUpdate(sql);
+            statement.execute(sqlInsert);
+
+            statement.executeBatch();
+            connection.commit();
         }
         catch (SQLException sqlException){
             logger.info(sqlException.getMessage());
