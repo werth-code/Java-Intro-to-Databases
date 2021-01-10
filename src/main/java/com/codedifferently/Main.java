@@ -45,6 +45,7 @@ public class Main {
 
     public void displayAllPeople() {
         mySQLDatabase.getAllPeople().forEach(person -> System.out.println(person.toString()));
+        System.out.println("");
     }
 
     private String getStringOutPut(String msg){
@@ -52,7 +53,7 @@ public class Main {
         return scanner.next();
     }
 
-    public Person findPerson(){ //// TODO: 1/9/21 This now returns the found person - may not need to..
+    public Person findPerson(){
         String email = getStringOutPut("Enter The Email Address Of The Contact You Are Looking For: ");
         try {
             Person person = addressBook.getPersonByEmail(email);
@@ -85,7 +86,7 @@ public class Main {
         rawData.put("age", getStringOutPut("Please enter new age:"));
         Person updatedPerson = new Person(person.getId(), rawData);
         mySQLDatabase.deletePerson(person);
-        mySQLDatabase.updatePerson(updatedPerson);
+        mySQLDatabase.updatePerson(updatedPerson, "PERSON");
    }
 
     public void deleteAnExistingContact() {
@@ -98,13 +99,22 @@ public class Main {
         System.out.println(output);
     }
 
+    public void setOwner() {
+        Person person = findPerson();
+        addressBook.setOwner(person);
+        mySQLDatabase.updatePerson(person, "OWNER");
+    }
+
+    public void sayOwner() {
+        if(addressBook.getOwner() != null) System.out.println(" Of " + addressBook.getOwner().getFirstName());
+    }
+
 
     public static void main(String[] args) {
         try {
             Main main = new Main();
             Boolean endProgram = false;
-            String greeting = String.format("\nWelcome To The Address Book");
-            System.out.println(greeting);
+            System.out.println("\nWelcome To The Address Book");
             while (!endProgram) {
                 int menuOption = main.displayMenu();
                 switch(menuOption){
@@ -128,7 +138,7 @@ public class Main {
                         main.deleteAnExistingContact();
                         break;
                     case 6:
-                        //main.setOwner();
+                        main.setOwner();
                         break;
                     default:
                         System.out.println("I don't know that command");

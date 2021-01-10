@@ -21,6 +21,14 @@ public class AddressBook {
         this.people = new ArrayList<>(); //// TODO: 1/8/21 Changed this to be a seperate List
     }
 
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+
+    public Person getOwner() {
+        return this.owner;
+    }
+
     public void addPerson(Person person){
         this.people.add(person);
         if(saveAll()) removePerson(person);  //// TODO: 1/8/21  Changed This to remove a person after we save them to DB

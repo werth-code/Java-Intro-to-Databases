@@ -31,6 +31,11 @@ public class MySQLDatabase implements Database {
         getConnection();
     }
 
+    @Override
+    public void setOwnerOnDatabase(Person person) {
+
+    }
+
     public List<Person> getAllPeople() {
         List<Person> people = new ArrayList<>();
         try {
@@ -68,10 +73,11 @@ public class MySQLDatabase implements Database {
             logger.info(e.getMessage());
         }
     }
-    
-    public void updatePerson(Person person) { //// TODO: 1/9/21 This sql may need to be fixed! We Need OLD value as well....
+
+    @Override
+    public void updatePerson(Person person, String table) {
         try {
-            String sqlInsert = String.format("INSERT INTO PERSON (id,first_name,last_name,email,age) VALUES ('%s','%s','%s','%s','%d')",
+            String sqlInsert = String.format("INSERT INTO "+ table +" (id,first_name,last_name,email,age) VALUES ('%s','%s','%s','%s','%d')",
                     person.getId(),
                     person.getFirstName(),
                     person.getLastName(),
@@ -88,23 +94,6 @@ public class MySQLDatabase implements Database {
         }
     }
 
-
-    @Override
-    public void savePerson(Person person) throws DatabaseCouldNotSaveException {
-        try {
-            String sqlInsert = String.format("INSERT INTO PERSON (id,first_name,last_name,email,age) VALUES ('%s','%s','%s','%s','%d')",
-                    person.getId(),
-                    person.getFirstName(),
-                    person.getLastName(),
-                    person.getEmail(),
-                    person.getAge());
-            Statement statement = connection.createStatement();
-            statement.execute(sqlInsert);
-        }
-        catch (SQLException sqlException){
-            throw new DatabaseCouldNotSaveException();
-        }
-    }
 
     public void saveAllPeople(List<Person> people) throws DatabaseCouldNotSaveException {
         try {

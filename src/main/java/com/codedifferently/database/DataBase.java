@@ -5,7 +5,9 @@ import com.codedifferently.person.Person;
 import java.util.List;
 
 interface Database {
-    void savePerson(Person person) throws DatabaseCouldNotSaveException;
+    void updatePerson(Person person, String table) throws DatabaseCouldNotSaveException;
     void saveAllPeople(List<Person> people) throws DatabaseCouldNotSaveException;
+    void deletePerson(Person person) throws DatabaseCouldNotSaveException;
+    void setOwnerOnDatabase(Person person) throws DatabaseCouldNotSaveException;
     List<Person> getAllPeople();
 }
